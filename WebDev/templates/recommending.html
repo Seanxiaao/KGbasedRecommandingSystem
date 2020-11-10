@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block stylesheets %}
+    <link href="/static/assets/css/bootstrap.css" rel="stylesheet">
+        <style type="text/css">
+          body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+          }
+          .tooltip {
+            position: absolute;
+            background-color: #888888;
+            text-align: center;
+            font-size: 8px;
+            color: whitesmoke;
+            padding: 2px 5px 2px 5px;
+          }
+        </style>
+    <link href="/static/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+{% endblock %}
+{% block javascript %}
+        <script src="/static/assets/js/audiojs/audio.min.js"></script>
+        <script src="/static/assets/js/jquery.js"></script>
+        <script src="/static/assets/js/bootstrap-transition.js"></script>
+        <script src="/static/assets/js/bootstrap-alert.js"></script>
+        <script src="/static/assets/js/bootstrap-modal.js"></script>
+        <script src="/static/assets/js/bootstrap-dropdown.js"></script>
+        <script src="/static/assets/js/bootstrap-scrollspy.js"></script>
+        <script src="/static/assets/js/bootstrap-tab.js"></script>
+        <script src="/static/assets/js/bootstrap-tooltip.js"></script>
+        <script src="/static/assets/js/bootstrap-popover.js"></script>
+        <script src="/static/assets/js/bootstrap-button.js"></script>
+        <script src="/static/assets/js/bootstrap-collapse.js"></script>
+        <script src="/static/assets/js/bootstrap-carousel.js"></script>
+        <script src="/static/assets/js/bootstrap-typeahead.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+        <script src="https://d3js.org/d3.v6.js"></script>
+{% endblock %}
+
+{% block content %}
+        <body>
+            <div style="display: flex; justify-content: flex-end">
+                <audio src="/static/assets/music/000/000005.mp3" preload="auto" >
+            </div>
+            <table id="recommendingTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                       {% for key in data.0.keys %}
+                        <th>{{ key }}</th>
+                       {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                        <tr>
+                            {% for value in item.values %}
+
+                                <td class="attribute">{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <script>
+
+                audiojs.events.ready(function() {
+                      var as = audiojs.createAll();
+                });
+
+                $(document).ready( function () {
+                    $('#recommendingTable').DataTable();
+                } );
+
+                var tooltip = d3.select('body')
+                    .append('div')
+                    .attr('class', 'tooltip')
+                    .style('opacity', 0);
+
+                d3.selectAll("td").on('mouseover', function (event) {
+
+                    d3.select("audio").attr("src", "/static/assets/music/000/000002.mp3");
+                    tooltip.transition()
+                        .duration(200)
+                        .style('opacity', 0.9);
+
+                    tooltip.html("just a tooltip")
+                        .style('left', (event.pageX - 5) + 'px')
+                        .style('top', (event.pageY + 5) + 'px');
+                })
+            </script>
+        </body>
+
+{% endblock content %}

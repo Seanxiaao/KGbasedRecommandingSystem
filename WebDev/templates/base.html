@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>recommending</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% block stylesheets %}
+        <!-- Bootstrap provided CSS files. -->
+        <link href="/static/assets/css/bootstrap.css" rel="stylesheet">
+        <style type="text/css">
+          body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+          }
+        </style>
+        <link href="/static/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    {% endblock stylesheets %}
+
+    {% block javascript %}
+
+        <!-- Bootstrap related javascript files -->
+        <script src="/static/assets/js/jquery.js"></script>
+        <script src="/static/assets/js/bootstrap-transition.js"></script>
+        <script src="/static/assets/js/bootstrap-alert.js"></script>
+        <script src="/static/assets/js/bootstrap-modal.js"></script>
+        <script src="/static/assets/js/bootstrap-dropdown.js"></script>
+        <script src="/static/assets/js/bootstrap-scrollspy.js"></script>
+        <script src="/static/assets/js/bootstrap-tab.js"></script>
+        <script src="/static/assets/js/bootstrap-tooltip.js"></script>
+        <script src="/static/assets/js/bootstrap-popover.js"></script>
+        <script src="/static/assets/js/bootstrap-button.js"></script>
+        <script src="/static/assets/js/bootstrap-collapse.js"></script>
+        <script src="/static/assets/js/bootstrap-carousel.js"></script>
+        <script src="/static/assets/js/bootstrap-typeahead.js"></script>
+    {% endblock javascript %}
+  </head>
+
+  <body>
+
+    {% block header %}
+        <div class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container">
+
+	              <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	              </a>
+
+                  <div class="nav-collapse">
+    	                <ul class="nav">
+    	                  <li class="active"><a href="/index">Music Graph</a></li>
+    	                  <li class=""><a href="/#">music recommending</a></li>
+    	                </ul>
+                  </div>
+
+	              <div>   <!-- 点击search,激活方法POST，触发home函数 -->
+{#                       action="{% url 'home' %}"#}
+		                <form class="navbar-search pull-left"  method="POST">
+		                  {% csrf_token %}  <!-- 用于防治跨站攻击验证 -->
+		                   <div style="overflow: hidden; padding-right: .5em;">
+                        <!-- 两个输入框，这是导航栏的搜索框 -->
+		                     <input type="text" name="data" style="width: 70%;" />
+		                     <input type="submit" name="search" value="search" size="30" style="float: right" />
+		                    </div>
+		                </form>
+	             </div>
+
+            </div>
+          </div>
+        </div>
+    {% endblock header %}
+
+
+
+    <div class="container">
+{#        <div class="hero-unit">#}
+
+            {% block content %} <!-- 其他页面会填充该部分：创建用户，主页，未找到，请注册，查询结果，推荐，注册，登出 -->
+            {% endblock content %} <!-- 超级用户登录，低于最小打分电影数量，用户已存在或其他问题 -->
+
+
+        </div>
+    </div>
+
+
+
+  </body>
+</html>
+
