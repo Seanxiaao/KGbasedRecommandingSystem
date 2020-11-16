@@ -69,7 +69,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'WebDev.wsgi.application'
+uri = "bolt://localhost:7687"
 
+driver = GraphDatabase.driver(uri, auth=("yexiao", "yexiao"))
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -79,6 +81,7 @@ WSGI_APPLICATION = 'WebDev.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

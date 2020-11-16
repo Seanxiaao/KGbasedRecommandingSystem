@@ -1,6 +1,6 @@
 <html>
 <head>
-{#   source code is from https://bl.ocks.org/steveharoz/8c3e2524079a8c440df60c1ab72b5d03#}
+{#   adapted code from https://bl.ocks.org/steveharoz/8c3e2524079a8c440df60c1ab72b5d03 #}
 <style>
 /* HTML styles */
 html{ width: 100%; }
@@ -9,6 +9,16 @@ body{
   margin: 0; padding: 0;
   display: flex;
   font-family: sans-serif; font-size: 75%; }
+
+.tooltip {
+    position: absolute;
+    background-color: #888888;
+    text-align: center;
+    font-size: 8px;
+    color: whitesmoke;
+    padding: 2px 5px 2px 5px;
+}
+
 .controls {
   flex-basis: 200px;
   padding: 0 5px;
@@ -156,13 +166,17 @@ svg {
     var link, node;
     // the data - an object with nodes and links
     var graph;
-
     // load the data
+
     {#d3.json("miserables.json", function(error, _graph) {#}
-    {#  if (error) throw error;#}
-    {#  graph = _graph;#}
-    {#  initializeDisplay();#}
-    {#  initializeSimulation();#}
+    {#    if (error) throw error;#}
+    {#    graph = _graph;#}
+    {#    initializeDisplay();#}
+    {#    initializeSimulation();#}
+
+
+
+    graph = JSON.parse("{{ data | escapejs}}");
 
     // values for all forces
     forceProperties = {
@@ -199,10 +213,15 @@ svg {
         }
     };
 
-    graph = JSON.parse("{{ data | escapejs }}");
+
+    /// color scale ///
+    var colors = d3.scaleOrdinal(d3.schemeCategory10);
+
+    var tooltip = d3.select('body').append('div')
+          .attr('class', 'tooltip')
+          .style('opacity', 0);
 
     //////////// FORCE SIMULATION ////////////
-
     // force simulator
     var simulation = d3.forceSimulation();
 
@@ -217,6 +236,7 @@ svg {
     // add forces to the simulation
     function initializeForces() {
         // add forces and associate each with a name
+        console.log(graph.links);
         simulation
             .force("link", d3.forceLink())
             .force("charge", d3.forceManyBody())
@@ -265,27 +285,59 @@ svg {
 
     // generate the svg objects and force simulation
     function initializeDisplay() {
+
+
+    // build the arrow.
+    svg.append("svg:defs").selectAll("marker")
+        .data(["end"])      // Different link/path types can be defined here
+      .enter().append("svg:marker")    // This section adds in the arrows
+        .attr("id", String)
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 15)
+        .attr("refY", -1.5)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+      .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
+
       // set the data and properties of link lines
       link = svg.append("g")
             .attr("class", "links")
         .selectAll("line")
         .data(graph.links)
-        .enter().append("line");
+        .enter().append("line")
+         .attr("marker-end", "url(#end)").
+          on('mouseover', function (event, d) {
+              tooltip.transition().duration(1000).style('opacity', 1);
+              tooltip.html("link relation: "  + '<b>' + d.relation + '</b>' ).style('left', (event.pageX + 5) + 'px').style('top', (event.pageY + 5) + 'px')
+          });
 
+      // add edge labels
       // set the data and properties of node circles
       node = svg.append("g")
             .attr("class", "nodes")
         .selectAll("circle")
         .data(graph.nodes)
         .enter().append("circle")
+          .attr('fill', function (d) {
+              return colors(d.group);
+          }).on('mouseover', function (event, d) {
+              tooltip.transition().duration(1000).style('opacity', 1);
+              var currhref = window.location.href;
+              if (!currhref.endsWith('/')) {
+                  currhref = '/graph/';
+              }
+              tooltip.html(
+                  "id: " + "<a href=" + "'" + currhref + "nodes/" + d._id + "'" +">" + d._id +"</a>" + "<br>" +
+                  "label: " + d.id
+                  ).style('left', (event.pageX + 5) + 'px').style('top', (event.pageY + 5)+ 'px')
+          })
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended));
 
-      // node tooltip
-      node.append("title")
-          .text(function(d) { return d.id; });
       // visualize the graph
       updateDisplay();
     }
@@ -294,12 +346,13 @@ svg {
     function updateDisplay() {
         node
             .attr("r", forceProperties.collide.radius)
-            .attr("stroke", forceProperties.charge.strength > 0 ? "blue" : "red")
-            .attr("stroke-width", forceProperties.charge.enabled==false ? 0 : Math.abs(forceProperties.charge.strength)/15);
+            .attr("stroke", forceProperties.charge.strength > 0 ? "white" : "black")
+            .attr("stroke-width", forceProperties.charge.enabled===false ? 0 : Math.abs(forceProperties.charge.strength)/15);
 
         link
             .attr("stroke-width", forceProperties.link.enabled ? 1 : .5)
             .attr("opacity", forceProperties.link.enabled ? 1 : 0);
+
     }
 
     // update the display positions after each simulation tick
@@ -320,19 +373,19 @@ svg {
 
     //////////// UI EVENTS ////////////
 
-    function dragstarted(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
 
-    function dragged(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
     }
 
-    function dragended(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.0001);
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0.0001);
       d.fx = null;
       d.fy = null;
     }
@@ -352,6 +405,7 @@ svg {
 
     initializeDisplay();
     initializeSimulation();
+
 </script>
 </body>
 </html>

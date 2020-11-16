@@ -21,5 +21,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('recommending/', include('recommanding.urls')),
     path('graph/', include('graph.urls'))
-
 ]

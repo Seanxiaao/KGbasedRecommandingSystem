@@ -2,14 +2,12 @@ from django.shortcuts import render
 from django.views.generic import View
 # Create your views here.
 from neo4j import GraphDatabase
-
-uri = "bolt://localhost:7687"
+from WebDev.settings import driver
 
 
 class RecommendingView(View):
 
     TEMPLATE = 'recommending.html'
-    driver = GraphDatabase.driver(uri, auth=("yexiao", "yexiao"))
 
     @staticmethod
     def _get_movie_of(tx, name):
@@ -36,15 +34,15 @@ class RecommendingView(View):
         :return:
         """
         result = []
-        r = tx.run("MATCH (n:Movie) RETURN n.tagline AS tagline, n.title AS title, n.released as rel LIMIT 25")
+        r = tx.run("MATCH (n:Music) RETURN n.hasKeyword AS keyword, n.id AS id, n.hasTag as tag LIMIT 25")
         for record in r:
-            temp = {'tagline': record['tagline'], 'title': record['title'], 'release date': record['rel']}
+            temp = {'tagline': record['tag'], 'keyword': record['keyword'], 'id': record['id']}
             result.append(temp)
         return result
 
     def get(self, request):
         # to do, add music, add table
-        with self.driver.session() as session:
+        with driver.session() as session:
             data = session.read_transaction(self._get_frist_25)
 
         return render(request, self.TEMPLATE, {'data': data})
