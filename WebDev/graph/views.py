@@ -45,7 +45,7 @@ class GraphView(View):
                                  "properties(n) as n_properties, labels(n) as n_labels, "
                                  "id(n) as n_id, r, "
                                  "properties(m) as m_properties, labels(m) as m_labels, "
-                                 "id(m) as m_id LIMIT 1500")
+                                 "id(m) as m_id LIMIT 1000")
 
             # make component of json
             for record in list(result):
@@ -160,6 +160,9 @@ class NodeDetailView(View):
                             raise Exception("key not found")
                         data_dic['links'].append(temp_dic)
                     visited_path.add((source.id, target.id))
-        print(len(data_dic['links']))
+
         # return HttpResponse(json.dumps(data_dic), content_type="application/json")
         return render(request, self.TEMPLATE, {'data': json.dumps(data_dic)})
+
+    def post(self, request):
+        pass
