@@ -23,8 +23,8 @@ def pickle_in(name, default_path='./data/'):
 class RecommendingView(View):
 
     TEMPLATE = 'recommending.html'
+    
     def __init__(self):
-        
         self.num_dimensions = 700
         self.df_merged = pickle_in('df_merged')
 
