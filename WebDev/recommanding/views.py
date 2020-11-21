@@ -8,6 +8,18 @@ from sklearn.neighbors import NearestNeighbors
 import pickle
 import pandas as pd
 
+def pickle_out(name, obj, default_path='./data/'):
+        pickle_out = open(default_path + name + '.pickle','wb')
+        pickle.dump(obj, pickle_out)
+        pickle_out.close()
+        return
+
+def pickle_in(name, default_path='./data/'):
+    pickle_in = open(default_path + name + '.pickle','rb')
+    obj = pickle.load(pickle_in)
+    pickle_in.close()
+    return obj
+
 class RecommendingView(View):
 
     TEMPLATE = 'recommending.html'
@@ -26,18 +38,6 @@ class RecommendingView(View):
         self.user_recommend_list = sorted(user_recommend_list, key=lambda KV: KV[1], reverse=True)
         self.model = restore_model(model_name_path = './model/complex_model_opt_lf.pkl')
         pass
-
-    def pickle_out(name, obj, default_path='./data/'):
-        pickle_out = open(default_path + name + '.pickle','wb')
-        pickle.dump(obj, pickle_out)
-        pickle_out.close()
-        return
-
-    def pickle_in(name, default_path='./data/'):
-        pickle_in = open(default_path + name + '.pickle','rb')
-        obj = pickle.load(pickle_in)
-        pickle_in.close()
-        return obj
 
     @staticmethod
     def _get_movie_of(tx, name):
