@@ -6,6 +6,7 @@ from WebDev.settings import driver
 from ampligraph.utils import restore_model
 from sklearn.neighbors import NearestNeighbors
 import pickle
+import pandas as pd
 
 class RecommendingView(View):
 
@@ -81,6 +82,10 @@ class RecommendingView(View):
     def get_recommend_by_user(self, request):
 
         k = request.data.get('k')
+        #user_recommend_list is the list of song_id (recommendation)
+        #if you need additional information of each song_id, then, 
+        #you can search self.df_merged with the song_id
+        #it will give you title, genre, # of listen, author, etc.
         return render(request, self.TEMPLATE, {'data': self.user_recommend_list[:k]})
 
     def get_recommend_by_song(self, request):
@@ -104,4 +109,9 @@ class RecommendingView(View):
         distances, indices = nbrs.kneighbors(embedding_array)
         nbrs_songs = [recommend_list[idx] for idx in indices[track_id_idx]]
         nbrs_songs.pop(nbrs_songs.index(track_id))
+
+        #nbrs_songs is the list of song_id (recommendation)
+        #if you need additional information of each song_id, then, 
+        #you can search self.df_merged with the song_id
+        #it will give you title, genre, # of listen, author, etc.
         return render(request, self.TEMPLATE, {'data': nbrs_songs[:k]})
