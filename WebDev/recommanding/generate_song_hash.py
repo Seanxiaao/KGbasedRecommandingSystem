@@ -30,7 +30,7 @@ def hash_multi_plane_matrix(P, v, num_planes):
     return hash_value
 
 
-if __name__ == '__name__':
+if __name__ == '__main__':
 
 	np.random.seed(0)
 	num_dimensions = 700
