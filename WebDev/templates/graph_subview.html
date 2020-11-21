@@ -235,6 +235,17 @@ svg {
         <button type="button" class="btn btn-info" id="wordnet-filter">Wordnet</button>
       </div>
       <br>
+      <a>Friend of Friend</a>
+      <div style="display: flex; justify-content: space-between; margin: 0 10% 0 10%">
+          <form class="form-search" action="" method="post">
+              {% csrf_token %}
+              <input type="submit" class="btn btn-inverse" value="2-HOP">
+          </form>
+          <form class="form-search" action="" method="get">
+              {% csrf_token %}
+              <input type="submit" class="btn btn-inverse" value="Back">
+          </form>
+      </div>
 </div>
 <script src="https://d3js.org/d3.v6.js"></script>
 <script>
@@ -545,7 +556,6 @@ svg {
 
     d3.select("#reset-button").on('click', function () {
         svg.selectAll("*").remove();
-        console.log(graph);
         initializeDisplay();
         initializeSimulation();
     })
