@@ -24,9 +24,8 @@ class RecommendingView(View):
 
     TEMPLATE = 'recommending.html'
     def __init__(self):
-        np.random.seed(0)
+        
         self.num_dimensions = 700
-
         self.df_merged = pickle_in('df_merged')
 
         self.song_hash = pickle_in('song_hash')
