@@ -32,22 +32,22 @@ def hash_multi_plane_matrix(P, v, num_planes):
 
 if __name__ == '__main__':
 
-	np.random.seed(0)
-	num_dimensions = 700
-	num_planes = 25
-	total_song_list = pickle_in('total_song_list')
-	model = restore_model(model_path = './model/complex_model_opt_lf.pkl')
-	
-	random_planes_matrix = np.random.normal(size=(num_planes, num_dimensions))
-	hash_multi_plane_matrix(random_planes_matrix, v, num_planes)
+    np.random.seed(0)
+    num_dimensions = 700
+    num_planes = 25
+    total_song_list = pickle_in('total_song_list')
+    model = restore_model(model_path = './model/complex_model_opt_lf.pkl')
 
-	song_hash = {}
-	for song in total_song_list:
-	    v = model.get_embeddings([song])
-	    hash_value = hash_multi_plane_matrix(random_planes_matrix, v, num_planes)
-	    if hash_value in song_hash:
-	        song_hash[hash_value].append(song)
-	    else:
-	        song_hash[hash_value] = [song]
+    random_planes_matrix = np.random.normal(size=(num_planes, num_dimensions))
+    hash_multi_plane_matrix(random_planes_matrix, v, num_planes)
 
-	pickle('song_hash', song_hash)
+    song_hash = {}
+    for song in total_song_list:
+        v = model.get_embeddings([song])
+        hash_value = hash_multi_plane_matrix(random_planes_matrix, v, num_planes)
+        if hash_value in song_hash:
+	    song_hash[hash_value].append(song)
+        else:
+            song_hash[hash_value] = [song]
+
+    pickle('song_hash', song_hash)
