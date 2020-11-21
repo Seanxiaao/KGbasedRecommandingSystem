@@ -45,7 +45,7 @@ if __name__ == '__main__':
         v = model.get_embeddings([song])
         hash_value = hash_multi_plane_matrix(random_planes_matrix, v, num_planes)
         if hash_value in song_hash:
-        song_hash[hash_value].append(song)
+            song_hash[hash_value].append(song)
         else:
             song_hash[hash_value] = [song]
 
