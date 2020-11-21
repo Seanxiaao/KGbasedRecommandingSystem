@@ -9,10 +9,10 @@ import pickle
 import pandas as pd
 
 def pickle_out(name, obj, default_path='./data/'):
-        pickle_out = open(default_path + name + '.pickle','wb')
-        pickle.dump(obj, pickle_out)
-        pickle_out.close()
-        return
+    pickle_out = open(default_path + name + '.pickle','wb')
+    pickle.dump(obj, pickle_out)
+    pickle_out.close()
+    return
 
 def pickle_in(name, default_path='./data/'):
     pickle_in = open(default_path + name + '.pickle','rb')
