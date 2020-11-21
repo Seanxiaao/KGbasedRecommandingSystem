@@ -92,6 +92,7 @@ class RecommendingView(View):
             if track_id in self.song_hash[key]:
                 track_id_idx = self.song_hash[key].index(track_id)
                 recommend_list = self.song_hash[key]
+                break
 
         embedding_array = np.zeros((len(recommend_list), num_dimensions))
         for i, rec in enumerate(recommend_list):
