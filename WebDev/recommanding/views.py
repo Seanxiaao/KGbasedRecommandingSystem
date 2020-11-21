@@ -15,10 +15,11 @@ class RecommendingView(View):
         self.num_dimensions = 700
 
         self.df_merged = pickle_in('df_merged')
+
         self.song_hash = pickle_in('song_hash')
         self.y_pred = pickle_in('y_pred_user_8332014')
         self.unseen_predict = pickle_in('unseen_predict')
-        self.default_user_id = 'user_8332014'
+        #self.default_user_id = 'user_8332014'
 
         user_recommend_list = [(t_item[2], score) for t_item, score in zip(self.unseen_predict, self.y_pred)]
         self.user_recommend_list = sorted(user_recommend_list, key=lambda KV: KV[1], reverse=True)
@@ -94,7 +95,7 @@ class RecommendingView(View):
                 recommend_list = self.song_hash[key]
                 break
 
-        embedding_array = np.zeros((len(recommend_list), num_dimensions))
+        embedding_array = np.zeros((len(recommend_list), self.num_dimensions))
         for i, rec in enumerate(recommend_list):
             embedding_array[i, :] = self.model.get_embeddings(rec)
 
