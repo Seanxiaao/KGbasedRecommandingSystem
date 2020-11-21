@@ -39,7 +39,6 @@ if __name__ == '__main__':
     model = restore_model(model_path = './model/complex_model_opt_lf.pkl')
 
     random_planes_matrix = np.random.normal(size=(num_planes, num_dimensions))
-    hash_multi_plane_matrix(random_planes_matrix, v, num_planes)
 
     song_hash = {}
     for song in total_song_list:
