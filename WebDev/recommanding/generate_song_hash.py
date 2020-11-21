@@ -50,4 +50,4 @@ if __name__ == '__main__':
         else:
             song_hash[hash_value] = [song]
 
-    pickle('song_hash', song_hash)
+    pickle_out('song_hash', song_hash)
